@@ -5,7 +5,7 @@ This repo was based off [Evan Flynn's ROS2 Node for Bosch BNO055 IMU Sensor](htt
 ---
 ## Change list
 - initial checkin removes .github branch dir
-
+- read Euler Angles from bno055 sensor and publish using RPY (Roll Pitch Yaw) custom message on /bno055/RPY topic.
 ---
 # A BNO05 ROS2 Package 
 
