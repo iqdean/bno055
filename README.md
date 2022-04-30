@@ -1,3 +1,9 @@
+# Paramotor Flight Panel Customizations
+This repo was based off [Evan Flynn's ROS2 Node for Bosch BNO055 IMU Sensor](https://github.com/flynneva/bno055)
+---
+## Change list
+- initial checkin removes .github branch dir
+---
 # A BNO05 ROS2 Package 
 
 ## Description
