@@ -41,7 +41,7 @@ from rclpy.qos import QoSProfile
 from sensor_msgs.msg import Imu, MagneticField, Temperature
 from std_msgs.msg import String
 from example_interfaces.srv import Trigger
-
+from avionic_interfaces.msg import RPY
 
 class SensorService:
     """Provide an interface for accessing the sensor's features & data."""
@@ -60,6 +60,7 @@ class SensorService:
         self.pub_mag = node.create_publisher(MagneticField, prefix + 'mag', QoSProf)
         self.pub_temp = node.create_publisher(Temperature, prefix + 'temp', QoSProf)
         self.pub_calib_status = node.create_publisher(String, prefix + 'calib_status', QoSProf)
+        self.pub_rpy = node.create_publisher(RPY, prefix + 'rpy', QoSProf)
         self.srv = self.node.create_service(Trigger, prefix + 'calibration_request', self.calibration_request_callback)
 
     def configure(self):
@@ -243,6 +244,14 @@ class SensorService:
         # temp_msg.header.seq = seq
         temp_msg.temperature = float(buf[44])
         self.pub_temp.publish(temp_msg)
+
+        # Publish Euler Orientation (RPY)
+        # Per bno055 datasheet, Euler Angle Representaion in Degrees is 1 Deg = 16 LSB
+        euler = RPY()
+        euler.roll = self.unpackBytesToFloat(buf[20], buf[21])/16
+        euler.pitch = self.unpackBytesToFloat(buf[22], buf[23])/16
+        euler.yaw = self.unpackBytesToFloat(buf[18], buf[19])/16
+        self.pub_rpy.publish(euler)
 
     def get_calib_status(self):
         """
