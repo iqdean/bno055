@@ -5,7 +5,7 @@ bno055:
     uart_port: "/dev/ttyUSB0"
     uart_baudrate: 115200
     uart_timeout: 0.1
-    data_query_frequency: 100
+    data_query_frequency: 50
     calib_status_frequency: 0.1
     frame_id: "bno055"
     operation_mode: 0x0C
@@ -13,10 +13,27 @@ bno055:
     acc_factor: 100.0
     mag_factor: 16000000.0
     gyr_factor: 900.0
-    set_offsets: false # set to true to use offsets below
-    offset_acc: [0xFFEC, 0x00A5, 0xFFE8]
-    offset_mag: [0xFFB4, 0xFE9E, 0x027D]
-    offset_gyr: [0x0002, 0xFFFF, 0xFFFF]
+    #set_offsets: false # set to true to use offsets below
+    #offset_acc: [0xFFEC, 0x00A5, 0xFFE8]
+    #offset_mag: [0xFFB4, 0xFE9E, 0x027D]
+    #offset_gyr: [0x0002, 0xFFFF, 0xFFFF]
+    # After Calibrating, 
+    # A) dump calibration parameters using
+    # $ ros2 service call /bno055/calibration_request example_interfaces/srv/Trigger
+    # response: example_interfaces.srv.Trigger_Response(success=True, 
+    #  message="{'accel_offset': {'x': 65527, 'y': 41, 'z': 65509},   FFF7 0029 FFE5
+    #            'accel_radius': 1000,                                03E8
+    #            'mag_offset': {'x': 64775, 'y': 64989, 'z': 22},     FD07 FDDD 0016   
+    #            'mag_radius': 748,                                   02EC 
+    #            'gyro_offset': {'x': 1, 'y': 65535, 'z': 3}          0001 FFFF 0003
+    #            }"
+    # B) Translate decimal to hex as shown below
+    set_offsets: true
+    offset_acc: [0xFFF7, 0x0029, 0xFFE5]
+    radius_acc: 0x3E8
+    offset_mag: [0xFD07, 0xFDDD, 0x0016]
+    radius_mag: 0x02EC
+    offset_gyr: [0x0001, 0xFFFF, 0x0003]
     ## Sensor standard deviation [x,y,z]
     ## Used to calculate covariance matrices
     ## defaults are used if parameters below are not provided
